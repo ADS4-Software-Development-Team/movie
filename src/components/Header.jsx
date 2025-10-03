@@ -22,7 +22,7 @@ const Header = ({ onSearch, searchQuery }) => {
       <div className="header-content">
         <div className="logo">
           <Film size={32} />
-          <span>MovieDB</span>
+          <span>Dekago Movies</span>
         </div>
         
         <div className="search-container">

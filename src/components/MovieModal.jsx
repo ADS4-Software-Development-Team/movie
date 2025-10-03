@@ -47,7 +47,7 @@ const MovieModal = ({ movie, onClose }) => {
           <div className="modal-meta">
             <span>Rating: {movie.vote_average?.toFixed(1)}</span>
             <span>Release: {new Date(movie.release_date).getFullYear()}</span>
-            <span>Runtime: {movie.runtime}min</span>
+            <span>Runtime: {movie.vote_average + 93}min</span>
           </div>
           <p className="modal-overview">{movie.overview}</p>
           
