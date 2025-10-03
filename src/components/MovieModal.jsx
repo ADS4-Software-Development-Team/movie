@@ -3,23 +3,33 @@ import { X, Play } from 'lucide-react'
 
 const MovieModal = ({ movie, onClose }) => {
   const [trailerKey, setTrailerKey] = useState(null)
+  const [runtime, setRuntime] = useState(null)
 
   useEffect(() => {
-    const fetchTrailer = async () => {
+    const fetchMovieDetails = async () => {
       try {
-        const response = await fetch(
+        // Fetch full movie details (including runtime)
+        const detailsRes = await fetch(
+          `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=en-US`
+        )
+        const detailsData = await detailsRes.json()
+        setRuntime(detailsData.runtime)
+
+        // Fetch trailer
+        const trailerRes = await fetch(
           `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=en-US`
         )
-        const data = await response.json()
-        const trailer = data.results.find(video => 
-          video.type === 'Trailer' && video.site === 'YouTube'
+        const trailerData = await trailerRes.json()
+        const trailer = trailerData.results.find(
+          video => video.type === 'Trailer' && video.site === 'YouTube'
         )
         setTrailerKey(trailer?.key)
       } catch (error) {
-        console.error('Error fetching trailer:', error)
+        console.error('Error fetching movie details or trailer:', error)
       }
     }
-    fetchTrailer()
+
+    fetchMovieDetails()
   }, [movie])
 
   const handleBackdropClick = (e) => {
@@ -31,7 +41,7 @@ const MovieModal = ({ movie, onClose }) => {
   return (
     <div className="modal" onClick={handleBackdropClick}>
       <div className="modal-content">
-        <div 
+        <div
           className="modal-header"
           style={{
             backgroundImage: `url(https://image.tmdb.org/t/p/w1280${movie.backdrop_path})`
@@ -41,16 +51,18 @@ const MovieModal = ({ movie, onClose }) => {
             <X size={20} />
           </button>
         </div>
-        
+
         <div className="modal-body">
           <h2 className="modal-title">{movie.title}</h2>
           <div className="modal-meta">
             <span>Rating: {movie.vote_average?.toFixed(1)}</span>
             <span>Release: {new Date(movie.release_date).getFullYear()}</span>
-            <span>Runtime: {movie.vote_average + 93}min</span>
+            <span>
+              Runtime: {runtime && runtime > 0 ? `${runtime}min` : 'Not available'}
+            </span>
           </div>
           <p className="modal-overview">{movie.overview}</p>
-          
+
           <div className="trailer-container">
             <h3 className="trailer-title">Trailer</h3>
             {trailerKey ? (
