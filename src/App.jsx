@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Header from './components/Header'
 import GenreMenu from './components/genreMenu'
 import Carousel from './components/Carousel'
@@ -17,7 +17,10 @@ function App() {
   const { movies, popularMovies, loading, error } = useMovies(selectedGenre, searchQuery)
   const { genres } = useGenres()
 
-  // Load recently watched from localStorage on component mount
+  // Ref for scrolling Recently Watched
+  const recentlyWatchedRef = useRef(null)
+
+  // Load recently watched from localStorage on mount
   useEffect(() => {
     const watched = JSON.parse(localStorage.getItem('recentlyWatched') || '[]')
     setRecentlyWatched(watched)
@@ -26,7 +29,7 @@ function App() {
   const handleMovieClick = (movie) => {
     setSelectedMovie(movie)
     
-    // Add to recently watched
+    // Add to recently watched (max 8 in storage)
     const updatedWatched = [
       movie,
       ...recentlyWatched.filter(m => m.id !== movie.id)
@@ -53,6 +56,16 @@ function App() {
   // Safe slicing for carousel
   const carouselMovies = popularMovies?.slice(0, 5) || []
 
+  // Scroll Recently Watched left/right
+  const scrollRow = (direction) => {
+    if (!recentlyWatchedRef.current) return
+    const scrollAmount = 300
+    recentlyWatchedRef.current.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth'
+    })
+  }
+
   if (error) {
     return (
       <div className="error-container">
@@ -78,19 +91,28 @@ function App() {
         />
         
         <main className="main-content">
-          {/* Carousel Section - Only show if we have movies */}
+          {/* Carousel Section */}
           {carouselMovies.length > 0 && (
             <Carousel movies={carouselMovies} onMovieClick={handleMovieClick} />
           )}
           
-          {/* Recently Watched Section */}
+          {/* Recently Watched Section (max 5, horizontal row, scroll buttons) */}
           {recentlyWatched.length > 0 && (
             <>
               <h2 className="section-title">Recently Watched</h2>
-              <MovieGrid 
-                movies={recentlyWatched} 
-                onMovieClick={handleMovieClick}
-              />
+              <div className="recently-watched-container">
+                
+                
+                <div className="recently-watched-row" ref={recentlyWatchedRef}>
+                  <MovieGrid 
+                    movies={recentlyWatched} 
+                    onMovieClick={handleMovieClick}
+                    paginate={false}   // no pagination
+                    limit={6}          // only 6 items
+                    rowMode={true}     // horizontal row
+                  />
+                </div>
+              </div>
             </>
           )}
           
@@ -104,11 +126,12 @@ function App() {
             movies={movies || []} 
             onMovieClick={handleMovieClick}
             loading={loading}
+            paginate={true}
           />
         </main>
       </div>
 
-      {/* Movie Detail Modal */}
+      {/* Movie Modal */}
       {selectedMovie && (
         <MovieModal 
           movie={selectedMovie}
