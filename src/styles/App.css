@@ -112,6 +112,11 @@ header {
   padding: 2rem 0;
   flex-shrink: 0;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+
+   position: sticky;   /* 👈 add */
+  top: 80px;          /* 👈 below your header height */
+  height: calc(100vh - 80px); /* so it fills the screen */
+  overflow-y: auto;   /* scroll only inside the menu if long */
 }
 
 .genre-menu-header {
