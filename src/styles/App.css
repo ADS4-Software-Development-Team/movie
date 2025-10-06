@@ -846,16 +846,12 @@ header {
   .recently-watched-row {
     /* Switch to grid layout on mobile */
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-columns: 1fr; /* Use a single column */
+    grid-template-columns: repeat(2, 1fr); /* Use a two-column grid */
     gap: 1rem;
     overflow-x: visible;
   }
   
   .movie-row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    display: contents; /* Let the parent grid control the layout */
   }
 
   .recently-watched-row .movie-card {

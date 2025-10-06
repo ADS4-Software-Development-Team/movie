@@ -3,27 +3,35 @@ import { X, Play, Star } from 'lucide-react'
 
 const MovieModal = ({ movie, onClose }) => {
   const [trailerKey, setTrailerKey] = useState(null)
+  const [runtime, setRuntime] = useState(null)
   const [cast, setCast] = useState([])
 
   // Fetch trailer
   useEffect(() => {
-    const fetchTrailer = async () => {
+    const fetchMovieDetails = async () => {
       try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${
-            import.meta.env.VITE_TMDB_API_KEY
-          }&language=en-US`
+        // Fetch full movie details (including runtime)
+        const detailsRes = await fetch(
+          `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=en-US`
         )
-        const data = await response.json()
-        const trailer = data.results.find(
-          (video) => video.type === 'Trailer' && video.site === 'YouTube'
+        const detailsData = await detailsRes.json()
+        setRuntime(detailsData.runtime)
+
+        // Fetch trailer
+        const trailerRes = await fetch(
+          `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=en-US`
+        )
+        const trailerData = await trailerRes.json()
+        const trailer = trailerData.results.find(
+          video => video.type === 'Trailer' && video.site === 'YouTube'
         )
         setTrailerKey(trailer?.key)
       } catch (error) {
-        console.error('Error fetching trailer:', error)
+        console.error('Error fetching movie details or trailer:', error)
       }
     }
-    fetchTrailer()
+
+    fetchMovieDetails()
   }, [movie])
 
   // Fetch cast
@@ -73,7 +81,9 @@ const MovieModal = ({ movie, onClose }) => {
               <Star size={16} color="gold" fill="gold" />
             </span>
             <span>Release: {new Date(movie.release_date).getFullYear()}</span>
-            <span>Runtime: {movie.vote_average + 93}min</span>
+            <span>
+              Runtime: {runtime && runtime > 0 ? `${runtime}min` : 'Not available'}
+            </span>
           </div>
 
           {/* Cast section */}
