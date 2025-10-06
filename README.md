@@ -5,8 +5,6 @@ Built with React and Vite, it offers a seamless and responsive user experience.
 
 ---
 
-# 🎬 DekagoMovies
-
 [![DekagoMovies Demo](assets/dekago.gif)](https://dekagomovies.vercel.app/)
 
 DekagoMovies is a dynamic movie discovery platform that allows users to explore the latest films and top-rated shows from Bollywood, Hollywood, and beyond.  
