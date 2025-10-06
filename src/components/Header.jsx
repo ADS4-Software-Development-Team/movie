@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Search, Film } from 'lucide-react'
+import { Search, Film, Menu } from 'lucide-react'
 
-const Header = ({ onSearch, searchQuery }) => {
+const Header = ({ onSearch, searchQuery, onMenuClick }) => {
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery || '')
 
   const handleSearch = (e) => {
@@ -20,6 +20,11 @@ const Header = ({ onSearch, searchQuery }) => {
   return (
     <header>
       <div className="header-content">
+        {/* Mobile Menu Icon */}
+        <div className="menu-icon" onClick={onMenuClick}>
+          <Menu size={28} />
+        </div>
+
         <div className="logo">
           <Film size={32} />
           <span>Dekago Movies</span>

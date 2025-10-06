@@ -13,6 +13,8 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedMovie, setSelectedMovie] = useState(null)
   const [recentlyWatched, setRecentlyWatched] = useState([])
+  const [recentlyWatchedPage, setRecentlyWatchedPage] = useState(1)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const { movies, popularMovies, loading, error } = useMovies(selectedGenre, searchQuery)
   const { genres } = useGenres()
@@ -51,6 +53,7 @@ function App() {
   const handleGenreSelect = (genre) => {
     setSelectedGenre(genre)
     setSearchQuery('')
+    setIsMenuOpen(false) // Close menu on genre selection
   }
 
   // Safe slicing for carousel
@@ -81,6 +84,7 @@ function App() {
       <Header 
         onSearch={handleSearch}
         searchQuery={searchQuery}
+        onMenuClick={() => setIsMenuOpen(!isMenuOpen)}
       />
       
       <div className="app-body">
@@ -88,6 +92,7 @@ function App() {
           genres={genres || []}
           selectedGenre={selectedGenre}
           onGenreSelect={handleGenreSelect}
+          isMenuOpen={isMenuOpen}
         />
         
         <main className="main-content">
@@ -101,15 +106,15 @@ function App() {
             <>
               <h2 className="section-title">Recently Watched</h2>
               <div className="recently-watched-container">
-                
-                
                 <div className="recently-watched-row" ref={recentlyWatchedRef}>
                   <MovieGrid 
                     movies={recentlyWatched} 
                     onMovieClick={handleMovieClick}
                     paginate={false}   // no pagination
-                    limit={6}          // only 6 items
+                    limit={8}          // Show up to 8 items
                     rowMode={true}     // horizontal row
+                    currentPage={recentlyWatchedPage}
+                    onPageChange={setRecentlyWatchedPage}
                   />
                 </div>
               </div>

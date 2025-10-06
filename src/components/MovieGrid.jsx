@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import MovieCard from './MovieCard'
 
-const MovieGrid = ({ movies, onMovieClick, loading, paginate = true, limit = null, rowMode = false }) => {
-  const [currentPage, setCurrentPage] = useState(1)
-  const moviesPerPage = 15
+const MovieGrid = ({ movies, onMovieClick, loading, paginate = true, limit = null, rowMode = false, currentPage: externalCurrentPage, onPageChange: externalOnPageChange }) => {
+  const [internalCurrentPage, setInternalCurrentPage] = useState(1)
+  const isPaginatedExternally = externalCurrentPage !== undefined;
+  const currentPage = isPaginatedExternally ? externalCurrentPage : internalCurrentPage;
+  const setCurrentPage = isPaginatedExternally ? externalOnPageChange : setInternalCurrentPage;
 
   if (loading) {
     return (
@@ -21,20 +23,23 @@ const MovieGrid = ({ movies, onMovieClick, loading, paginate = true, limit = nul
     )
   }
 
+  // Determine movies per page based on context
+  const moviesPerPage = rowMode ? 4 : 15;
+
   // 👉 Apply limit (for Recently Watched)
   const limitedMovies = limit ? movies.slice(0, limit) : movies
 
   // 👉 If pagination is enabled, slice for pages
   const indexOfLastMovie = currentPage * moviesPerPage
   const indexOfFirstMovie = indexOfLastMovie - moviesPerPage
-  const currentMovies = paginate
+  const currentMovies = paginate || rowMode
     ? limitedMovies.slice(indexOfFirstMovie, indexOfLastMovie)
     : limitedMovies
 
   const totalPages = Math.ceil(limitedMovies.length / moviesPerPage)
 
   return (
-    <div>
+    <div className="movie-grid-container">
       {/* 👉 Row mode for Recently Watched */}
       <div className={rowMode ? "movie-row" : "movie-grid"}>
         {currentMovies.map(movie => (
@@ -46,8 +51,8 @@ const MovieGrid = ({ movies, onMovieClick, loading, paginate = true, limit = nul
         ))}
       </div>
 
-      {/* 👉 Show pagination only if paginate=true */}
-      {paginate && totalPages > 1 && (
+      {/* 👉 Show pagination if paginate=true OR if in rowMode on mobile */}
+      {(paginate || rowMode) && totalPages > 1 && (
         <div className="pagination">
           <button 
             disabled={currentPage === 1} 
