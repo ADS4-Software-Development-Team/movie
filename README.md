@@ -35,6 +35,10 @@ Experience the app live at:
 - **Detailed Movie Pages:** View comprehensive information including cast, synopsis, and trailers.
 
 ---
+[![Vercel](https://img.shields.io/badge/Live-DekagoMovies-blue)](https://dekagomovies.vercel.app/)
+[![React](https://img.shields.io/badge/React-17.0.2-blue?logo=react)](https://reactjs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+
 
 ## 📦 Installation
 
