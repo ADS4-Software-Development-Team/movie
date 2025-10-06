@@ -1,16 +1,46 @@
-# React + Vite
+# 🎬 DekagoMovies
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+DekagoMovies is a dynamic movie discovery platform that allows users to explore the latest films and top-rated shows from Bollywood, Hollywood, and beyond.  
+Built with React and Vite, it offers a seamless and responsive user experience.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Live Demo
 
-## React Compiler
+Experience the app live at:  
+[https://dekagomovies.vercel.app/](https://dekagomovies.vercel.app/)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 📸 Screenshots
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+![DekagoMovies Screenshot](https://dekagomovies.vercel.app/assets/images/screenshot.png)
+
+---
+
+## 🛠️ Technologies Used
+
+- **Frontend:** React, Vite
+- **API:** The Movie Database (TMDb) API
+- **Styling:** CSS Modules
+- **Deployment:** Vercel
+
+---
+
+## 🔍 Features
+
+- **Movie Discovery:** Browse the latest and top-rated movies.
+- **Search Functionality:** Find movies by title, genre, or actor.
+- **Responsive Design:** Optimized for both desktop and mobile devices.
+- **Detailed Movie Pages:** View comprehensive information including cast, synopsis, and trailers.
+
+---
+
+## 📦 Installation
+
+To run this project locally:
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/ADS4-Software-Development-Team/movie.git
