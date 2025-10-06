@@ -16,12 +16,6 @@ Experience the app live at:
 
 ---
 
-## 📸 Screenshots
-
-![DekagoMovies Screenshot](https://dekagomovies.vercel.app/assets/images/screenshot.png)
-
----
-
 ## 🛠️ Technologies Used
 
 - **Frontend:** React, Vite
