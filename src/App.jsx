@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import Header from './components/Header'
-import GenreMenu from './components/genreMenu'
+import GenreMenu from './components/GenreMenu'
 import Carousel from './components/Carousel'
 import MovieGrid from './components/MovieGrid'
 import MovieModal from './components/MovieModal'
@@ -13,13 +13,11 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedMovie, setSelectedMovie] = useState(null)
   const [recentlyWatched, setRecentlyWatched] = useState([])
-  const [recentlyWatchedPage, setRecentlyWatchedPage] = useState(1)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const { movies, popularMovies, loading, error } = useMovies(selectedGenre, searchQuery)
   const { genres } = useGenres()
 
-  // Ref for scrolling Recently Watched
   const recentlyWatchedRef = useRef(null)
 
   // Load recently watched from localStorage on mount
@@ -30,13 +28,12 @@ function App() {
 
   const handleMovieClick = (movie) => {
     setSelectedMovie(movie)
-    
-    // Add to recently watched (max 8 in storage)
+
     const updatedWatched = [
       movie,
       ...recentlyWatched.filter(m => m.id !== movie.id)
     ].slice(0, 8)
-    
+
     setRecentlyWatched(updatedWatched)
     localStorage.setItem('recentlyWatched', JSON.stringify(updatedWatched))
   }
@@ -53,21 +50,10 @@ function App() {
   const handleGenreSelect = (genre) => {
     setSelectedGenre(genre)
     setSearchQuery('')
-    setIsMenuOpen(false) // Close menu on genre selection
+    setIsMenuOpen(false)
   }
 
-  // Safe slicing for carousel
   const carouselMovies = popularMovies?.slice(0, 5) || []
-
-  // Scroll Recently Watched left/right
-  const scrollRow = (direction) => {
-    if (!recentlyWatchedRef.current) return
-    const scrollAmount = 300
-    recentlyWatchedRef.current.scrollBy({
-      left: direction === 'left' ? -scrollAmount : scrollAmount,
-      behavior: 'smooth'
-    })
-  }
 
   if (error) {
     return (
@@ -86,7 +72,7 @@ function App() {
         searchQuery={searchQuery}
         onMenuClick={() => setIsMenuOpen(!isMenuOpen)}
       />
-      
+
       <div className="app-body">
         <GenreMenu 
           genres={genres || []}
@@ -94,41 +80,41 @@ function App() {
           onGenreSelect={handleGenreSelect}
           isMenuOpen={isMenuOpen}
         />
-        
+
         <main className="main-content">
           {/* Carousel Section */}
           {carouselMovies.length > 0 && (
             <Carousel movies={carouselMovies} onMovieClick={handleMovieClick} />
           )}
-          
-          {/* Recently Watched Section (max 5, horizontal row, scroll buttons) */}
+
+          {/* Recently Watched Section */}
           {recentlyWatched.length > 0 && (
             <>
               <h2 className="section-title">Recently Watched</h2>
               <div className="recently-watched-container">
                 <div className="recently-watched-row" ref={recentlyWatchedRef}>
                   <MovieGrid 
-                    movies={recentlyWatched} 
+                    movies={recentlyWatched}
                     onMovieClick={handleMovieClick}
-                    paginate={false}   // no pagination
-                    limit={8}          // Show up to 8 items
-                    rowMode={true}     // horizontal row
-                    currentPage={recentlyWatchedPage}
-                    onPageChange={setRecentlyWatchedPage}
+                    rowMode={true}
+                    limit={6}
+                    paginate={false}
                   />
                 </div>
               </div>
             </>
           )}
-          
+
           {/* Recommendations Section */}
           <h2 className="section-title">
-            {selectedGenre ? `${selectedGenre.name} Movies` : 
-             searchQuery ? `Search Results for "${searchQuery}"` : 
-             'Popular Movies'}
+            {selectedGenre
+              ? `${selectedGenre.name} Movies`
+              : searchQuery
+                ? `Search Results for "${searchQuery}"`
+                : 'Popular Movies'}
           </h2>
           <MovieGrid 
-            movies={movies || []} 
+            movies={movies || []}
             onMovieClick={handleMovieClick}
             loading={loading}
             paginate={true}
@@ -136,9 +122,8 @@ function App() {
         </main>
       </div>
 
-      {/* Movie Modal */}
       {selectedMovie && (
-        <MovieModal 
+        <MovieModal
           movie={selectedMovie}
           onClose={handleCloseModal}
         />
@@ -146,5 +131,5 @@ function App() {
     </div>
   )
 }
-////
+
 export default App

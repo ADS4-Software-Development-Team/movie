@@ -1,11 +1,21 @@
 import { useState } from 'react'
 import MovieCard from './MovieCard'
 
-const MovieGrid = ({ movies, onMovieClick, loading, paginate = true, limit = null, rowMode = false, currentPage: externalCurrentPage, onPageChange: externalOnPageChange }) => {
+const MovieGrid = ({
+  movies,
+  onMovieClick,
+  loading,
+  paginate = true,
+  limit = null,
+  rowMode = false,
+  currentPage: externalCurrentPage,
+  onPageChange: externalOnPageChange
+}) => {
   const [internalCurrentPage, setInternalCurrentPage] = useState(1)
-  const isPaginatedExternally = externalCurrentPage !== undefined;
-  const currentPage = isPaginatedExternally ? externalCurrentPage : internalCurrentPage;
-  const setCurrentPage = isPaginatedExternally ? externalOnPageChange : setInternalCurrentPage;
+
+  const isPaginatedExternally = externalCurrentPage !== undefined
+  const currentPage = isPaginatedExternally ? externalCurrentPage : internalCurrentPage
+  const setCurrentPage = isPaginatedExternally ? externalOnPageChange : setInternalCurrentPage
 
   if (loading) {
     return (
@@ -23,16 +33,15 @@ const MovieGrid = ({ movies, onMovieClick, loading, paginate = true, limit = nul
     )
   }
 
-  // Determine movies per page based on context
-  const moviesPerPage = rowMode ? 4 : 15;
+  const moviesPerPage = rowMode ? 4 : 15
 
-  // 👉 Apply limit (for Recently Watched)
+  // ✅ Apply limit if provided
   const limitedMovies = limit ? movies.slice(0, limit) : movies
 
-  // 👉 If pagination is enabled, slice for pages
+  // ✅ Slice for pagination ONLY if paginate === true
   const indexOfLastMovie = currentPage * moviesPerPage
   const indexOfFirstMovie = indexOfLastMovie - moviesPerPage
-  const currentMovies = paginate || rowMode
+  const currentMovies = paginate
     ? limitedMovies.slice(indexOfFirstMovie, indexOfLastMovie)
     : limitedMovies
 
@@ -40,8 +49,7 @@ const MovieGrid = ({ movies, onMovieClick, loading, paginate = true, limit = nul
 
   return (
     <div className="movie-grid-container">
-      {/* 👉 Row mode for Recently Watched */}
-      <div className={rowMode ? "movie-row" : "movie-grid"}>
+      <div className={rowMode ? 'movie-row' : 'movie-grid'}>
         {currentMovies.map(movie => (
           <MovieCard
             key={movie.id}
@@ -51,11 +59,11 @@ const MovieGrid = ({ movies, onMovieClick, loading, paginate = true, limit = nul
         ))}
       </div>
 
-      {/* 👉 Show pagination if paginate=true OR if in rowMode on mobile */}
-      {(paginate || rowMode) && totalPages > 1 && (
+      {/* ✅ Only show pagination if paginate is true */}
+      {paginate && totalPages > 1 && (
         <div className="pagination">
-          <button 
-            disabled={currentPage === 1} 
+          <button
+            disabled={currentPage === 1}
             onClick={() => setCurrentPage(prev => prev - 1)}
           >
             Prev
@@ -71,8 +79,8 @@ const MovieGrid = ({ movies, onMovieClick, loading, paginate = true, limit = nul
             </button>
           ))}
 
-          <button 
-            disabled={currentPage === totalPages} 
+          <button
+            disabled={currentPage === totalPages}
             onClick={() => setCurrentPage(prev => prev + 1)}
           >
             Next
